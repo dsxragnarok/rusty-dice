@@ -19,7 +19,6 @@ impl Dice {
     }
 
     pub fn roll_n_times(&self, n: u32) -> Vec<u32> {
-        let range = Uniform::new_inclusive(1, self.sides);
         let mut rolls = Vec::new();
 
         for _ in 0..n {
