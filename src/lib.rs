@@ -3,6 +3,7 @@ extern crate rand;
 use rand::{thread_rng, Rng};
 use rand::distributions::Uniform;
 
+#[derive(Debug)]
 struct Dice {
     sides: u32
 }
@@ -29,6 +30,19 @@ impl Dice {
     }
 }
 
+impl PartialEq for Dice {
+    fn eq(&self, other: &Dice) -> bool {
+        self.sides == other.sides
+    }
+}
+
+struct D4;
+impl D4 {
+    fn new() -> Dice {
+        Dice { sides: 4 }
+    }
+}
+
 #[cfg(test)]
 mod tests {
 
@@ -51,5 +65,11 @@ mod tests {
         for roll in rolls.iter() {
             assert!(*roll >= 1 && *roll <= 6);
         }
+    }
+
+    #[test]
+    fn it_creates_a_four_sided_die() {
+        let d4 = super::Dice::new(4);
+        assert_eq!(d4, super::D4::new());
     }
 }
