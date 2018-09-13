@@ -3,14 +3,25 @@ extern crate rand;
 use rand::{thread_rng, Rng};
 use rand::distributions::Uniform;
 
+pub enum Die {
+    D2 = 2,
+    D4 = 4,
+    D6 = 6,
+    D8 = 8,
+    D10 = 10,
+    D12 = 12,
+    D20 = 20,
+    D100 = 100
+}
+
 #[derive(Debug)]
-struct Dice {
+pub struct Dice {
     sides: u32
 }
 
 impl Dice {
-    pub fn new(sides: u32) -> Dice {
-        Dice { sides }
+    pub fn new(die: Die) -> Dice {
+        Dice { sides: die as u32 }
     }
 
     pub fn roll(&self) -> u32 {
@@ -36,20 +47,31 @@ impl PartialEq for Dice {
     }
 }
 
-struct D4;
-impl D4 {
-    fn new() -> Dice {
-        Dice { sides: 4 }
-    }
-}
-
 #[cfg(test)]
 mod tests {
+    use super::Dice;
+    use super::Die;
+
+    #[test]
+    fn it_creates_a_four_sided_die() {
+        let d4 = Dice::new(Die::D4);
+        assert_eq!(d4.sides, 4);
+    }
+    #[test]
+    fn it_creates_a_eight_sided_die() {
+        let d8 = Dice::new(Die::D8);
+        assert_eq!(d8.sides, 8);
+    }
+    #[test]
+    fn it_creates_a_twenty_sided_die() {
+        let d20 = Dice::new(Die::D20);
+        assert_eq!(d20.sides, 20);
+    }
 
     #[test]
     fn it_returns_number_between_1_and_4() {
         for _ in 0..100 {
-            let d4 = super::Dice::new(4);
+            let d4 = Dice::new(Die::D4);
             let roll = d4.roll();
             assert!(roll >= 1 && roll <= 4);
         }
@@ -57,7 +79,7 @@ mod tests {
 
     #[test]
     fn it_returns_number_vector_of_rolls_within_range() {
-        let d6 = super::Dice::new(6);
+        let d6 = Dice::new(Die::D6);
         let rolls = d6.roll_n_times(30);
 
         assert_eq!(rolls.len(), 30);
@@ -67,9 +89,4 @@ mod tests {
         }
     }
 
-    #[test]
-    fn it_creates_a_four_sided_die() {
-        let d4 = super::Dice::new(4);
-        assert_eq!(d4, super::D4::new());
-    }
 }
