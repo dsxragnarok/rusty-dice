@@ -24,6 +24,12 @@ pub struct Dice {
 }
 
 impl Dice {
+    fn _roll(&self) -> u32 {
+        let range = Uniform::new_inclusive(1, self.sides);
+
+        thread_rng().sample(range)
+    }
+
     pub fn new(die: Die) -> Dice {
         Dice {
             die,
@@ -33,10 +39,8 @@ impl Dice {
         }
     }
 
-    fn _roll(&self) -> u32 {
-        let range = Uniform::new_inclusive(1, self.sides);
-
-        thread_rng().sample(range)
+    pub fn n(&mut self, n: u32) {
+        self.n = n;
     }
 }
 
@@ -65,6 +69,14 @@ mod tests {
     fn it_creates_a_twenty_sided_die() {
         let d20 = Dice::new(Die::D20);
         assert_eq!(d20.die as u32, 20);
+    }
+
+    #[test]
+    fn it_sets_the_n_property() {
+        let mut die = Dice::new(Die::D12);
+        die.n(3);
+
+        assert_eq!(die.n, 3);
     }
 
     #[test]
