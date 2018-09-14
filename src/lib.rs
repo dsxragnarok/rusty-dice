@@ -38,16 +38,6 @@ impl Dice {
 
         thread_rng().sample(range)
     }
-
-    pub fn roll_n_times(&self, n: u32) -> Vec<u32> {
-        let mut rolls = Vec::new();
-
-        for _ in 0..n {
-            rolls.push(self.roll());
-        }
-
-        rolls
-    }
 }
 
 impl PartialEq for Dice {
@@ -85,17 +75,4 @@ mod tests {
             assert!(roll >= 1 && roll <= 4);
         }
     }
-
-    #[test]
-    fn it_returns_number_vector_of_rolls_within_range() {
-        let d6 = Dice::new(Die::D6);
-        let rolls = d6.roll_n_times(30);
-
-        assert_eq!(rolls.len(), 30);
-
-        for roll in rolls.iter() {
-            assert!(*roll >= 1 && *roll <= 6);
-        }
-    }
-
 }
