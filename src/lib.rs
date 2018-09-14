@@ -42,6 +42,10 @@ impl Dice {
     pub fn n(&mut self, n: u32) {
         self.n = n;
     }
+
+    pub fn modifier(&mut self, modifier: i32) {
+        self.modifier = modifier;
+    }
 }
 
 impl PartialEq for Dice {
@@ -77,6 +81,14 @@ mod tests {
         die.n(3);
 
         assert_eq!(die.n, 3);
+    }
+
+    #[test]
+    fn it_sets_the_modifier_property() {
+        let mut die = Dice::new(Die::D100);
+        die.modifier(-20);
+
+        assert_eq!(die.modifier, -20);
     }
 
     #[test]
