@@ -3,6 +3,7 @@ extern crate rand;
 use rand::{thread_rng, Rng};
 use rand::distributions::Uniform;
 
+#[derive(Debug, Copy, Clone)]
 pub enum Die {
     D2 = 2,
     D4 = 4,
@@ -16,12 +17,20 @@ pub enum Die {
 
 #[derive(Debug)]
 pub struct Dice {
-    sides: u32
+    die: Die,
+    sides: u32,
+    n: u32,
+    modifier: i32
 }
 
 impl Dice {
     pub fn new(die: Die) -> Dice {
-        Dice { sides: die as u32 }
+        Dice {
+            die,
+            sides: die as u32,
+            n: 1,
+            modifier: 0
+        }
     }
 
     pub fn roll(&self) -> u32 {
@@ -55,17 +64,17 @@ mod tests {
     #[test]
     fn it_creates_a_four_sided_die() {
         let d4 = Dice::new(Die::D4);
-        assert_eq!(d4.sides, 4);
+        assert_eq!(d4.die as u32, 4);
     }
     #[test]
     fn it_creates_a_eight_sided_die() {
         let d8 = Dice::new(Die::D8);
-        assert_eq!(d8.sides, 8);
+        assert_eq!(d8.die as u32, 8);
     }
     #[test]
     fn it_creates_a_twenty_sided_die() {
         let d20 = Dice::new(Die::D20);
-        assert_eq!(d20.sides, 20);
+        assert_eq!(d20.die as u32, 20);
     }
 
     #[test]
