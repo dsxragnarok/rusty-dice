@@ -2,7 +2,6 @@ extern crate rand;
 
 use rand::{thread_rng, Rng};
 use rand::distributions::Uniform;
-use std::any::{Any, TypeId};
 
 #[derive(Debug, Copy, Clone)]
 pub enum Die {
@@ -47,6 +46,23 @@ impl Dice {
     pub fn modifier(&mut self, modifier: i32) {
         self.modifier = modifier;
     }
+
+    pub fn roll(&mut self) -> RollResult {
+        let mut rolls = Vec::new();
+        let mut sum = 0;
+        for _ in 0..self.n {
+            let roll = self._roll();
+            rolls.push(roll);
+            sum += roll;
+        }
+
+        RollResult {
+            die: self.die,
+            modifier: self.modifier,
+            total: sum as i32 + self.modifier,
+            rolls,
+        }
+    }
 }
 
 impl PartialEq for Dice {
@@ -55,22 +71,12 @@ impl PartialEq for Dice {
     }
 }
 
-struct RollResult {
+pub struct RollResult {
     die: Die,
-    rolls: Vec<i32>,
+    rolls: Vec<u32>,
     modifier: i32,
     total: i32
 }
-
-trait InstanceOf
-where
-    Self: Any,
-{
-    fn instance_of<U: ?Sized + Any>(&self) -> bool {
-        TypeId::of::<Self>() == TypeId::of::<U>()
-    }
-}
-impl<RollResult: ?Sized + Any> InstanceOf for RollResult {}
 
 #[cfg(test)]
 mod tests {
@@ -118,10 +124,17 @@ mod tests {
     }
 
     #[test]
-    fn it_returns_RollResult() {
-        let d6 = Dice::new(Die::D6);
+    fn it_returns_resulting_vector_of_rolls_and_total() {
+        let mut d6 = Dice::new(Die::D6);
+        d6.n(6);
+        d6.modifier(3);
         let result = d6.roll();
 
-        assert!(result.instance_of::<RollResult>());
+        assert_eq!(result.die as u32, d6.die as u32);
+        assert_eq!(result.modifier, d6.modifier);
+        assert_eq!(result.rolls.len(), d6.n as usize);
+
+        let sum: u32 = result.rolls.iter().sum();
+        assert_eq!(result.total, sum as i32 + result.modifier);
     }
 }
