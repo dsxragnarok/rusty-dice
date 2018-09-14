@@ -14,7 +14,7 @@
 ### public methods
 - new(die) -> Dice
 - n(n: u32) -> ()
-- mod(m: i32) -> ()
+- modifier(modifier: i32) -> ()
 - roll() -> RollResult
 
 ## RollResult module
