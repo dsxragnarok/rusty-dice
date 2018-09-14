@@ -39,12 +39,14 @@ impl Dice {
         }
     }
 
-    pub fn n(&mut self, n: u32) {
+    pub fn n(&mut self, n: u32) -> &mut Dice {
         self.n = n;
+        self
     }
 
-    pub fn modifier(&mut self, modifier: i32) {
+    pub fn modifier(&mut self, modifier: i32) -> &mut Dice {
         self.modifier = modifier;
+        self
     }
 
     pub fn roll(&mut self) -> RollResult {
@@ -133,6 +135,18 @@ mod tests {
         assert_eq!(result.die as u32, d6.die as u32);
         assert_eq!(result.modifier, d6.modifier);
         assert_eq!(result.rolls.len(), d6.n as usize);
+
+        let sum: u32 = result.rolls.iter().sum();
+        assert_eq!(result.total, sum as i32 + result.modifier);
+    }
+
+    #[test]
+    fn it_should_chain_methods_to_build_roll_result() {
+        let result = Dice::new(Die::D10).n(9).modifier(4).roll();
+
+        assert_eq!(result.die as u32, Die::D10 as u32);
+        assert_eq!(result.modifier, 4);
+        assert_eq!(result.rolls.len(), 9);
 
         let sum: u32 = result.rolls.iter().sum();
         assert_eq!(result.total, sum as i32 + result.modifier);
