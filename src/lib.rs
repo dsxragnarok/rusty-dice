@@ -33,7 +33,7 @@ impl Dice {
         }
     }
 
-    pub fn roll(&self) -> u32 {
+    fn _roll(&self) -> u32 {
         let range = Uniform::new_inclusive(1, self.sides);
 
         thread_rng().sample(range)
@@ -71,7 +71,7 @@ mod tests {
     fn it_returns_number_between_1_and_4() {
         for _ in 0..100 {
             let d4 = Dice::new(Die::D4);
-            let roll = d4.roll();
+            let roll = d4._roll();
             assert!(roll >= 1 && roll <= 4);
         }
     }
