@@ -18,10 +18,10 @@
 - roll() -> RollResult
 
 ## RollResult module
-- die
-- rolls
-- mod
-- total
+- die: Die
+- rolls: Vec<u32>
+- mod: i32
+- total: i32
 
 ### methods
 
