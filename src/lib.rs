@@ -3,6 +3,7 @@ extern crate rand;
 use rand::{thread_rng, Rng};
 use rand::distributions::Uniform;
 
+/// The available dice types denoting the number of sides
 #[derive(Debug, Copy, Clone)]
 pub enum Die {
     D2 = 2,
@@ -15,6 +16,7 @@ pub enum Die {
     D100 = 100
 }
 
+/// Represents a Dice Roll
 #[derive(Debug)]
 pub struct Dice {
     die: Die,
@@ -24,12 +26,17 @@ pub struct Dice {
 }
 
 impl Dice {
+    /// Returns a random number between 1 and maximum number on a given die
     fn _roll(&self) -> u32 {
         let range = Uniform::new_inclusive(1, self.sides);
 
         thread_rng().sample(range)
     }
 
+    /// Returns a Dice instance
+    ///
+    /// # Parameters
+    /// * `die` - The die type
     pub fn new(die: Die) -> Dice {
         Dice {
             die,
@@ -39,16 +46,25 @@ impl Dice {
         }
     }
 
+    /// Sets the `n` property and returns **Self** to allow for chaining
+    ///
+    /// # Parameters
+    /// * `n` - The number of times to roll the die
     pub fn n(&mut self, n: u32) -> &mut Dice {
         self.n = n;
         self
     }
 
+    /// Sets the `modifier` property and returns **Self** to allow for chaining
+    ///
+    /// # Parameters
+    /// * `modifier` - The modifier to the sum result
     pub fn modifier(&mut self, modifier: i32) -> &mut Dice {
         self.modifier = modifier;
         self
     }
 
+    /// Executes the rolls and returns the RollResult
     pub fn roll(&mut self) -> RollResult {
         let mut rolls = Vec::new();
         let mut sum = 0;
