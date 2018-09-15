@@ -35,7 +35,7 @@ mod tests {
             total: 20,
         };
 
-        let log = build_log(result);
+        let log = build_log(&result);
 
         assert_eq!(log, "You rolled 4d8+4 for 20");
     }
@@ -49,7 +49,7 @@ mod tests {
             total: 4,
         };
 
-        let log = build_log(result);
+        let log = build_log(&result);
 
         assert_eq!(log, "You rolled 2d4-3 for 4");
     }
@@ -63,7 +63,7 @@ mod tests {
             total: 6,
         };
 
-        let log = build_log(result);
+        let log = build_log(&result);
 
         assert_eq!(log, "You rolled 1d6 for 6");
     }
