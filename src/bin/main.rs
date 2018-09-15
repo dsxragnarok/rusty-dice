@@ -13,4 +13,9 @@ fn main() {
     let rolls  = &roll.rolls;
     println!("{}", logger::build_log(&roll));
     println!(" >>> {:?}", rolls);
+
+
+    let d = "d4";
+    let d: Vec<&str> = d.split('d').collect();
+    println!("{:?}", d);
 }
