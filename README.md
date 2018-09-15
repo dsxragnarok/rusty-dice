@@ -25,11 +25,19 @@
 - total: i32
 
 ## Command module
-### commands
-- dx
-- ndx
-- ndx[+|-]m
-- ndx [+|-] m
+### Command
+#### members
+- `n`
+- `die`
+- `modifier`
+
+### syntax
+- `dx`: roll a **x-sided** die **once**.
+- `ndx`: roll a **x-sided** die **n times**.
+- `ndx+m`: roll a **x-sided** die **n times** then add **m** to the result.
+- `ndx-m`: roll a **x-sided** die **n times** then subtract **m** from the result.
+### functions
+- parse(input: String) -> Command
 
 ## Logger module
 ### functions
