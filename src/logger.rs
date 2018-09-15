@@ -6,18 +6,18 @@ use dice::RollResult;
 /// * `result` - The a dice roll result object
 ///
 /// Returns the formatted log String
-pub fn build_log(result: RollResult) -> String {
+pub fn build_log(result: &RollResult) -> String {
     let RollResult { die, rolls, modifier, total } = result;
 
-    let modifier = if modifier > 0 {
-        format!("+{}", modifier)
-    } else if modifier == 0 {
+    let modifier = if *modifier > 0 {
+        format!("+{}", *modifier)
+    } else if *modifier == 0 {
         String::from("")
     } else {
-        format!("{}", modifier)
+        format!("{}", *modifier)
     };
 
-    format!("You rolled {}d{}{} for {}", rolls.len(), die as u32, modifier, total)
+    format!("You rolled {}d{}{} for {}", rolls.len(), *die as u32, modifier, total)
 }
 
 #[cfg(test)]
