@@ -16,16 +16,16 @@ pub enum Die {
     D100 = 100
 }
 
-/// Represents a Dice Roll
+/// Represents a Roll Roll
 #[derive(Debug)]
-pub struct Dice {
+pub struct Roll {
     die: Die,
     sides: u32,
     modifier: i32,
     number_of_rolls: u32,
 }
 
-impl Dice {
+impl Roll {
     /// Returns a random number between 1 and maximum number on a given die
     fn _roll(&self) -> u32 {
         let range = Uniform::new_inclusive(1, self.sides);
@@ -33,12 +33,12 @@ impl Dice {
         thread_rng().sample(range)
     }
 
-    /// Returns a Dice instance
+    /// Returns a Roll instance
     ///
     /// # Parameters
     /// * `die` - The die type
-    pub fn new(die: Die) -> Dice {
-        Dice {
+    pub fn new(die: Die) -> Roll {
+        Roll {
             die,
             sides: die as u32,
             number_of_rolls: 1,
@@ -50,7 +50,7 @@ impl Dice {
     ///
     /// # Parameters
     /// * `n` - The number of times to roll the die
-    pub fn number_of_rolls(&mut self, n: u32) -> &mut Dice {
+    pub fn number_of_rolls(&mut self, n: u32) -> &mut Roll {
         self.number_of_rolls = n;
         self
     }
@@ -59,7 +59,7 @@ impl Dice {
     ///
     /// # Parameters
     /// * `m` - The modifier to the sum result
-    pub fn modifier(&mut self, m: i32) -> &mut Dice {
+    pub fn modifier(&mut self, m: i32) -> &mut Roll {
         self.modifier = m;
         self
     }
@@ -83,17 +83,18 @@ impl Dice {
     }
 }
 
-impl PartialEq for Dice {
-    fn eq(&self, other: &Dice) -> bool {
+impl PartialEq for Roll {
+    fn eq(&self, other: &Roll) -> bool {
         self.sides == other.sides
     }
 }
 
+/// Represents the result of a roll session
 pub struct RollResult {
-    die: Die,
-    rolls: Vec<u32>,
-    modifier: i32,
-    total: i32
+    pub die: Die,
+    pub rolls: Vec<u32>,
+    pub modifier: i32,
+    pub total: i32,
 }
 
 #[cfg(test)]
@@ -102,23 +103,23 @@ mod tests {
 
     #[test]
     fn it_creates_a_four_sided_die() {
-        let d4 = Dice::new(Die::D4);
+        let d4 = Roll::new(Die::D4);
         assert_eq!(d4.die as u32, 4);
     }
     #[test]
     fn it_creates_a_eight_sided_die() {
-        let d8 = Dice::new(Die::D8);
+        let d8 = Roll::new(Die::D8);
         assert_eq!(d8.die as u32, 8);
     }
     #[test]
     fn it_creates_a_twenty_sided_die() {
-        let d20 = Dice::new(Die::D20);
+        let d20 = Roll::new(Die::D20);
         assert_eq!(d20.die as u32, 20);
     }
 
     #[test]
     fn it_sets_the_n_property() {
-        let mut die = Dice::new(Die::D12);
+        let mut die = Roll::new(Die::D12);
         die.number_of_rolls(3);
 
         assert_eq!(die.number_of_rolls, 3);
@@ -126,7 +127,7 @@ mod tests {
 
     #[test]
     fn it_sets_the_modifier_property() {
-        let mut die = Dice::new(Die::D100);
+        let mut die = Roll::new(Die::D100);
         die.modifier(-20);
 
         assert_eq!(die.modifier, -20);
@@ -135,7 +136,7 @@ mod tests {
     #[test]
     fn it_returns_number_between_1_and_4() {
         for _ in 0..100 {
-            let d4 = Dice::new(Die::D4);
+            let d4 = Roll::new(Die::D4);
             let roll = d4._roll();
             assert!(roll >= 1 && roll <= 4);
         }
@@ -143,7 +144,7 @@ mod tests {
 
     #[test]
     fn it_returns_resulting_vector_of_rolls_and_total() {
-        let mut d6 = Dice::new(Die::D6);
+        let mut d6 = Roll::new(Die::D6);
         d6.number_of_rolls(6);
         d6.modifier(3);
         let result = d6.roll();
@@ -158,7 +159,7 @@ mod tests {
 
     #[test]
     fn it_should_chain_methods_to_build_roll_result() {
-        let result = Dice::new(Die::D10).number_of_rolls(9).modifier(4).roll();
+        let result = Roll::new(Die::D10).number_of_rolls(9).modifier(4).roll();
 
         assert_eq!(result.die as u32, Die::D10 as u32);
         assert_eq!(result.modifier, 4);
