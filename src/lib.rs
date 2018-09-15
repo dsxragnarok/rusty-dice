@@ -20,7 +20,6 @@ pub enum Die {
 #[derive(Debug)]
 pub struct Roll {
     die: Die,
-    sides: u32,
     modifier: i32,
     number_of_rolls: u32,
 }
@@ -28,7 +27,7 @@ pub struct Roll {
 impl Roll {
     /// Returns a random number between 1 and maximum number on a given die
     fn _roll(&self) -> u32 {
-        let range = Uniform::new_inclusive(1, self.sides);
+        let range = Uniform::new_inclusive(1, self.die as u32);
 
         thread_rng().sample(range)
     }
@@ -40,7 +39,6 @@ impl Roll {
     pub fn new(die: Die) -> Roll {
         Roll {
             die,
-            sides: die as u32,
             number_of_rolls: 1,
             modifier: 0,
         }
@@ -85,7 +83,7 @@ impl Roll {
 
 impl PartialEq for Roll {
     fn eq(&self, other: &Roll) -> bool {
-        self.sides == other.sides
+        self.die as u32 == other.die as u32
     }
 }
 
