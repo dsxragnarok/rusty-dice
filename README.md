@@ -3,27 +3,26 @@
 ### die types (enums)
 **d2, d4, d6, d8, d10, d12, d20, d100**
 
-### properties
-- sides
-- n
-- mod
+### Roll struct
+#### properties
+- die
+- number_of_rolls
+- modifier
 
-### private methods
+#### private methods
 - _roll() -> u32
 
-### public methods
+#### public methods
 - new(die) -> Dice
-- n(n: u32) -> ()
-- modifier(modifier: i32) -> ()
+- number_of_rolls(n: u32) -> ()
+- modifier(m: i32) -> ()
 - roll() -> RollResult
 
-## RollResult module
+### RollResult struct
 - die: Die
 - rolls: Vec<u32>
-- mod: i32
+- modifier: i32
 - total: i32
-
-### methods
 
 ## Command module
 ### commands
@@ -31,3 +30,10 @@
 - ndx
 - ndx[+|-]m
 - ndx [+|-] m
+
+## Logger module
+### format
+```bash
+[09/14/2018 22:03:42] You rolled 2d6+3 for 13.
+    >>> { 6, 4 }
+```
