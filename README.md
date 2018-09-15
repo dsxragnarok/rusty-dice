@@ -32,6 +32,9 @@
 - ndx [+|-] m
 
 ## Logger module
+### functions
+- build_log(result) -> String
+
 ### format
 ```bash
 [09/14/2018 22:03:42] You rolled 2d6+3 for 13.
