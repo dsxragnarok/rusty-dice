@@ -1,5 +1,5 @@
 [package]
-name = "rusty-dice"
+name = "rustydice"
 version = "0.1.0"
 authors = ["Kevin Phung <phung.kevin@gmail.com>"]
 
