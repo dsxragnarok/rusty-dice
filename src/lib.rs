@@ -21,8 +21,8 @@ pub enum Die {
 pub struct Dice {
     die: Die,
     sides: u32,
-    n: u32,
-    modifier: i32
+    modifier: i32,
+    number_of_rolls: u32,
 }
 
 impl Dice {
@@ -41,26 +41,26 @@ impl Dice {
         Dice {
             die,
             sides: die as u32,
-            n: 1,
-            modifier: 0
+            number_of_rolls: 1,
+            modifier: 0,
         }
     }
 
-    /// Sets the `n` property and returns **Self** to allow for chaining
+    /// Sets the `number_of_rolls` property and returns **Self** to allow for chaining
     ///
     /// # Parameters
     /// * `n` - The number of times to roll the die
-    pub fn n(&mut self, n: u32) -> &mut Dice {
-        self.n = n;
+    pub fn number_of_rolls(&mut self, n: u32) -> &mut Dice {
+        self.number_of_rolls = n;
         self
     }
 
     /// Sets the `modifier` property and returns **Self** to allow for chaining
     ///
     /// # Parameters
-    /// * `modifier` - The modifier to the sum result
-    pub fn modifier(&mut self, modifier: i32) -> &mut Dice {
-        self.modifier = modifier;
+    /// * `m` - The modifier to the sum result
+    pub fn modifier(&mut self, m: i32) -> &mut Dice {
+        self.modifier = m;
         self
     }
 
@@ -68,7 +68,7 @@ impl Dice {
     pub fn roll(&mut self) -> RollResult {
         let mut rolls = Vec::new();
         let mut sum = 0;
-        for _ in 0..self.n {
+        for _ in 0..self.number_of_rolls {
             let roll = self._roll();
             rolls.push(roll);
             sum += roll;
@@ -119,9 +119,9 @@ mod tests {
     #[test]
     fn it_sets_the_n_property() {
         let mut die = Dice::new(Die::D12);
-        die.n(3);
+        die.number_of_rolls(3);
 
-        assert_eq!(die.n, 3);
+        assert_eq!(die.number_of_rolls, 3);
     }
 
     #[test]
@@ -144,13 +144,13 @@ mod tests {
     #[test]
     fn it_returns_resulting_vector_of_rolls_and_total() {
         let mut d6 = Dice::new(Die::D6);
-        d6.n(6);
+        d6.number_of_rolls(6);
         d6.modifier(3);
         let result = d6.roll();
 
         assert_eq!(result.die as u32, d6.die as u32);
         assert_eq!(result.modifier, d6.modifier);
-        assert_eq!(result.rolls.len(), d6.n as usize);
+        assert_eq!(result.rolls.len(), d6.number_of_rolls as usize);
 
         let sum: u32 = result.rolls.iter().sum();
         assert_eq!(result.total, sum as i32 + result.modifier);
@@ -158,7 +158,7 @@ mod tests {
 
     #[test]
     fn it_should_chain_methods_to_build_roll_result() {
-        let result = Dice::new(Die::D10).n(9).modifier(4).roll();
+        let result = Dice::new(Die::D10).number_of_rolls(9).modifier(4).roll();
 
         assert_eq!(result.die as u32, Die::D10 as u32);
         assert_eq!(result.modifier, 4);
