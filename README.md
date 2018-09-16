@@ -48,3 +48,8 @@
 [09/14/2018 22:03:42] You rolled 2d6+3 for 13.
     >>> { 6, 4 }
 ```
+
+## Notes
+- [ ] `Command` needs a `run()` or `execute()`
+- [ ] refactor `command::parse()` to using the **From** trait
+- [ ] implement the commandline interface module
