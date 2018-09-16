@@ -19,12 +19,10 @@ impl Command {
 
 pub fn parse(input_text: &str) -> Command {
     let string_parts: Vec<&str> = input_text.split('d').collect();
-
     let n = string_parts[0];
     let number_of_rolls: u32 = if n == "" { 1 } else { n.parse().unwrap() };
 
     let predicate = string_parts[1];
-
     let index = match predicate.find('+') {
         Some(i) => i,
         None => match predicate.find('-') {
@@ -33,15 +31,14 @@ pub fn parse(input_text: &str) -> Command {
         },
     };
 
-    let die;
-    let modifier: i32;
-    if index > 0 {
-        die = &predicate[..index];
-        modifier = predicate[index..].parse().unwrap();
+    let (die, modifier) = if index > 0 {
+        (
+            &predicate[..index],
+            predicate[index..].parse::<i32>().unwrap()
+        )
     } else {
-        die = predicate;
-        modifier = 0;
-    }
+        (predicate, 0)
+    };
 
     let die = match die {
         "2" => D2,
@@ -61,7 +58,6 @@ pub fn parse(input_text: &str) -> Command {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use dice::Die::*;
 
     fn assert_command_is_valid(expected: Command, actual: Command) {
         assert_eq!(expected.number_of_rolls, actual.number_of_rolls);
