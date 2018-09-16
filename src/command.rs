@@ -1,6 +1,7 @@
 use dice::Die;
 use dice::Die::*;
 
+#[derive(Debug)]
 pub struct Command {
     pub number_of_rolls: u32,
     pub die: Die,

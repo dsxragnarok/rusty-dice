@@ -86,6 +86,7 @@ impl PartialEq for Roll {
 }
 
 /// Represents the result of a roll session
+#[derive(Debug)]
 pub struct RollResult {
     pub die: Die,
     pub rolls: Vec<u32>,
