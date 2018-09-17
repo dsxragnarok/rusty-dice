@@ -20,7 +20,7 @@ fn main() {
         },
     };
 
-    let cmd = command::parse(&query[..]);
+    let cmd = command::Command::from(&query[..]);
 
     // need to implement a run() from Command struct
     let roll = dice::Roll::new(cmd.die)

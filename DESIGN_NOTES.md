@@ -13,7 +13,7 @@
 - _roll() -> u32
 
 #### public methods
-- new(die) -> Dice
+- new(die: Die) -> Roll
 - number_of_rolls(n: u32) -> ()
 - modifier(m: i32) -> ()
 - roll() -> RollResult
@@ -30,6 +30,9 @@
 - `n`
 - `die`
 - `modifier`
+#### methods
+- new(n: u32, die: Die, modifier: i32) -> Command
+- from(input_text: &str) -> Command
 
 ### syntax
 - `dx`: roll a **x-sided** die **once**.
@@ -51,6 +54,6 @@
 
 ## Notes
 - [ ] `Command` needs a `run()` or `execute()`
-- [ ] refactor `command::parse()` using the **From** trait
+- [x] refactor `command::parse()` to `Command::from()`
 - [ ] implement the commandline interface module
 - [ ] implement interactive mode
