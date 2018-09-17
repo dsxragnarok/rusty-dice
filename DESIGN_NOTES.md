@@ -33,6 +33,7 @@
 #### methods
 - new(n: u32, die: Die, modifier: i32) -> Command
 - from(input_text: &str) -> Command
+- run() -> RollResult
 
 ### syntax
 - `dx`: roll a **x-sided** die **once**.
@@ -53,7 +54,7 @@
 ```
 
 ## Notes
-- [ ] `Command` needs a `run()` or `execute()`
+- [x] `Command` needs a `run()` or `execute()`
 - [x] refactor `command::parse()` to `Command::from()`
 - [ ] implement the commandline interface module
 - [ ] implement interactive mode

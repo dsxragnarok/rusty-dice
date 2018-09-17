@@ -2,11 +2,10 @@ extern crate rustydice;
 
 use std::env;
 use std::process;
-use rustydice::command;
-use rustydice::dice;
+use rustydice::command::Command;
 use rustydice::logger;
 
-static USAGE: &str = "USAGE:\trusty-dice ndx[+|-]m";
+static USAGE: &str = "USAGE:\trustydice ndx[+|-]m";
 
 fn main() {
     let mut args = env::args();
@@ -20,14 +19,7 @@ fn main() {
         },
     };
 
-    let cmd = command::Command::from(&query[..]);
-
-    // need to implement a run() from Command struct
-    let roll = dice::Roll::new(cmd.die)
-                    .number_of_rolls(cmd.number_of_rolls)
-                    .modifier(cmd.modifier)
-                    .roll();
-
+    let roll = Command::from(&query[..]).run();
     let log = logger::build_log(&roll);
     println!("{}", log);
     println!(" >>> {:?}", &roll.rolls);

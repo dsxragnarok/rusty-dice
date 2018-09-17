@@ -1,4 +1,4 @@
-use dice::Die;
+use dice::{Die, Roll, RollResult};
 use dice::Die::*;
 
 #[derive(Debug)]
@@ -53,6 +53,13 @@ impl Command {
         };
 
         Command::new(number_of_rolls, die, modifier)
+    }
+
+    pub fn run(&self) -> RollResult {
+        Roll::new(self.die)
+            .number_of_rolls(self.number_of_rolls)
+            .modifier(self.modifier)
+            .roll()
     }
 }
 
@@ -144,5 +151,17 @@ mod tests {
         let cmd = Command::from("1d20-4");
 
         assert_command_is_valid(expected, cmd);
+    }
+
+    #[test]
+    fn it_executes_the_roll() {
+        let result = Command::from("1d12+5").run();
+
+        assert_eq!(result.die as u32, D12 as u32);
+        assert_eq!(result.modifier, 5);
+        assert_eq!(result.rolls.len(), 1);
+
+        let sum: u32 = result.rolls.iter().sum();
+        assert_eq!(result.total, sum as i32 + result.modifier);
     }
 }
