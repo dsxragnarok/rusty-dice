@@ -1,55 +1,33 @@
-# Dice Dude in Rust
-## Dice module
-### die types (enums)
-**d2, d4, d6, d8, d10, d12, d20, d100**
+# Rusty Dice
+An implementation of **Dice Dude** in **Rust**.
 
-### Roll struct
-#### properties
-- die
-- number_of_rolls
-- modifier
-
-#### private methods
-- _roll() -> u32
-
-#### public methods
-- new(die) -> Dice
-- number_of_rolls(n: u32) -> ()
-- modifier(m: i32) -> ()
-- roll() -> RollResult
-
-### RollResult struct
-- die: Die
-- rolls: Vec<u32>
-- modifier: i32
-- total: i32
-
-## Command module
-### Command
-#### members
-- `n`
-- `die`
-- `modifier`
-
-### syntax
-- `dx`: roll a **x-sided** die **once**.
-- `ndx`: roll a **x-sided** die **n times**.
-- `ndx+m`: roll a **x-sided** die **n times** then add **m** to the result.
-- `ndx-m`: roll a **x-sided** die **n times** then subtract **m** from the result.
-### functions
-- parse(input: String) -> Command
-
-## Logger module
-### functions
-- build_log(result) -> String
-
-### format
+## Usage
 ```bash
-[09/14/2018 22:03:42] You rolled 2d6+3 for 13.
-    >>> { 6, 4 }
+rustydice ndx[+|-]m
 ```
+- **n**: the number of times to roll the die
+- **dx**: the die type
+- **+m** | **-m**: the modifier
 
-## Notes
-- [ ] `Command` needs a `run()` or `execute()`
-- [ ] refactor `command::parse()` to using the **From** trait
-- [ ] implement the commandline interface module
+## Die Types
+- **d2**: 2-sided die (coin toss)
+- **d4**: 4-sided die
+- **d6**: 6-sided die
+- **d8**: 8-sided die
+- **d10**: 10-sided die
+- **d12**: 12-sided die
+- **d20**: 20-sided die
+- **d100**: 100-sided die
+
+## Examples
+```bash
+> rustydice 1d6
+You rolled 1d6 for 4
+ >>> [4]
+> rustydice 3d4-2
+You rolled 3d4-2 for 4
+ >>> [2, 3, 1]
+> rustydice 4d8+5
+You rolled 4d8+5 for 18
+ >>> [2, 2, 6, 3]
+```
