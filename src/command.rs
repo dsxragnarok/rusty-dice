@@ -17,8 +17,17 @@ impl Command {
         }
     }
 
-    pub fn from(input_text: &str) -> Command {
-        let string_parts: Vec<&str> = input_text.split('d').collect();
+    pub fn run(&self) -> RollResult {
+        Roll::new(self.die)
+            .number_of_rolls(self.number_of_rolls)
+            .modifier(self.modifier)
+            .roll()
+    }
+}
+
+impl<'a> From<&'a str> for Command {
+    fn from(text: &str) -> Self {
+        let string_parts: Vec<&str> = text.split('d').collect();
         let n = string_parts[0];
         let number_of_rolls: u32 = if n == "" { 1 } else { n.parse().unwrap() };
 
@@ -53,13 +62,6 @@ impl Command {
         };
 
         Command::new(number_of_rolls, die, modifier)
-    }
-
-    pub fn run(&self) -> RollResult {
-        Roll::new(self.die)
-            .number_of_rolls(self.number_of_rolls)
-            .modifier(self.modifier)
-            .roll()
     }
 }
 
