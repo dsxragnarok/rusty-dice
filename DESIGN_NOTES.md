@@ -57,4 +57,4 @@
 - [x] `Command` needs a `run()` or `execute()`
 - [x] refactor `command::parse()` to `Command::from()`
 - [ ] implement the commandline interface module
-- [ ] implement interactive mode
+- [x] implement interactive mode

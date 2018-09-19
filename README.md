@@ -5,6 +5,12 @@ An implementation of **Dice Dude** in **Rust**.
 ```bash
 rustydice ndx[+|-]m
 ```
+
+To run in **interactive mode**, pass the `-i` or `--interactive` option.
+```bash
+rustydice --interactive
+```
+
 - **n**: the number of times to roll the die
 - **dx**: the die type
 - **+m** | **-m**: the modifier
