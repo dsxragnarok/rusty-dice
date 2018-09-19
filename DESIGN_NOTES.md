@@ -5,31 +5,31 @@
 
 ### Roll struct
 #### properties
-- die
-- number_of_rolls
-- modifier
+- `die`: Die
+- `number_of_rolls`: u32
+- `modifier`: i32
 
 #### private methods
 - _roll() -> u32
 
 #### public methods
 - new(die: Die) -> Roll
-- number_of_rolls(n: u32) -> ()
-- modifier(m: i32) -> ()
+- number_of_rolls(n: u32) -> Roll
+- modifier(m: i32) -> Roll
 - roll() -> RollResult
 
 ### RollResult struct
-- die: Die
-- rolls: Vec<u32>
-- modifier: i32
-- total: i32
+- `die`: Die
+- `rolls`: Vec<u32>
+- `modifier`: i32
+- `total`: i32
 
 ## Command module
 ### Command
-#### members
-- `n`
-- `die`
-- `modifier`
+#### properties
+- `number_of_rolls`: u32
+- `die`: Die
+- `modifier`: i32
 #### methods
 - new(n: u32, die: Die, modifier: i32) -> Command
 - from(input_text: &str) -> Command
@@ -40,8 +40,6 @@
 - `ndx`: roll a **x-sided** die **n times**.
 - `ndx+m`: roll a **x-sided** die **n times** then add **m** to the result.
 - `ndx-m`: roll a **x-sided** die **n times** then subtract **m** from the result.
-### functions
-- parse(input: String) -> Command
 
 ## Logger module
 ### functions
@@ -53,8 +51,12 @@
     >>> { 6, 4 }
 ```
 
-## Notes
+## Todos
 - [x] `Command` needs a `run()` or `execute()`
 - [x] refactor `command::parse()` to `Command::from()`
 - [ ] implement the commandline interface module
 - [x] implement interactive mode
+- [ ] implement date/time
+- [ ] implement `help` command for **interactive mode**
+- [ ] implement `exit` command for **interactive mode**
+- [ ] implement `save-to-file`
