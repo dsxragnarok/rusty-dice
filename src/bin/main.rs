@@ -42,6 +42,7 @@ fn interactive_mode() {
 
         match query.trim() {
             "help" => display_help(),
+            "exit" => process::exit(0),
             _ => execute_roll(&query),
         }
     }
