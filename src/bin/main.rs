@@ -32,6 +32,22 @@ fn single_process_mode(ref mut args: env::Args) {
 }
 
 fn interactive_mode() {
+    display_help();
+
+    loop {
+        println!("Enter your roll command: ndx[+|-]m");
+
+        let mut query = String::new();
+        io::stdin().read_line(&mut query).expect("failed to read input");
+
+        match query.trim() {
+            "help" => display_help(),
+            _ => execute_roll(&query),
+        }
+    }
+}
+
+fn display_help() {
     println!("Command Syntax: ndx[+|-]m");
     println!("    [n]: number of times to roll the die");
     println!("[+m|-m]: the modifier to apply to the sum result");
@@ -44,14 +60,6 @@ fn interactive_mode() {
     println!("\t [d12]: 12-sided die");
     println!("\t [d20]: 20-sided die");
     println!("\t[d100]: 100-sided die");
-    loop {
-        println!("Enter your roll command: ndx[+|-]m");
-
-        let mut query = String::new();
-        io::stdin().read_line(&mut query).expect("failed to read input");
-
-        execute_roll(&query);
-    }
 }
 
 fn execute_roll(query: &String) {
