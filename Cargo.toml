@@ -4,4 +4,5 @@ version = "0.2.0"
 authors = ["Kevin Phung <phung.kevin@gmail.com>"]
 
 [dependencies]
+chrono = "0.4"
 rand = "0.5.5"
