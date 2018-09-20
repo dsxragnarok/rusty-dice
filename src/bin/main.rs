@@ -1,8 +1,10 @@
 extern crate rustydice;
+extern crate chrono;
 
 use std::env;
 use std::process;
 use std::io;
+use chrono::{Local};
 use rustydice::command::Command;
 use rustydice::logger;
 
@@ -68,6 +70,9 @@ fn display_help() {
 fn execute_roll(query: &String) {
     let roll = Command::from(&query.trim()[..]).run();
     let log = logger::build_log(&roll);
-    println!("{}", log);
+
+    let dt = Local::now().format("%m/%d/%Y %H:%M:%S");
+
+    println!("[{}] {}", dt, log);
     println!(" >>> {:?}", &roll.rolls);
 }
