@@ -56,7 +56,8 @@
 - [x] refactor `command::parse()` to `Command::from()`
 - [ ] implement the commandline interface module
 - [x] implement interactive mode
-- [ ] implement date/time
+- [x] implement date/time
 - [x] implement `help` command for **interactive mode**
 - [x] implement `exit` command for **interactive mode**
 - [ ] implement `save-to-file`
+- [ ] better error handling
