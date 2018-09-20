@@ -49,7 +49,9 @@ fn interactive_mode() {
 }
 
 fn display_help() {
-    println!("Command Syntax: ndx[+|-]m");
+    println!("exit: quit program");
+    println!("help: prints this help text");
+    println!("Roll Syntax: ndx[+|-]m");
     println!("    [n]: number of times to roll the die");
     println!("[+m|-m]: the modifier to apply to the sum result");
     println!("   [dx]: the type of die to roll");
