@@ -1,6 +1,6 @@
 [package]
 name = "rustydice"
-version = "0.4.0"
+version = "0.4.1"
 authors = ["Kevin Phung <phung.kevin@gmail.com>"]
 
 [dependencies]
