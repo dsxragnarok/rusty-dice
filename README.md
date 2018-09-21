@@ -7,8 +7,9 @@ rustydice ndx[+|-]m
 ```
 
 To run in **interactive mode**, pass the `-i` or `--interactive` option.
+You may pass an optional path to a file for the log output.
 ```bash
-rustydice --interactive
+rustydice --interactive [/path/to/logfile]
 ```
 
 - **n**: the number of times to roll the die
