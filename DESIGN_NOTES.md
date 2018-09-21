@@ -59,5 +59,5 @@
 - [x] implement date/time
 - [x] implement `help` command for **interactive mode**
 - [x] implement `exit` command for **interactive mode**
-- [ ] implement `save-to-file`
+- [x] implement `save-to-file`
 - [ ] better error handling
