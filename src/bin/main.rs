@@ -3,8 +3,10 @@ extern crate chrono;
 
 use std::env;
 use std::process;
+use std::fs::File;
 use std::io;
-use chrono::{Local};
+use std::io::Write;
+use chrono::Local;
 use rustydice::command::Command;
 use rustydice::logger;
 
@@ -13,7 +15,7 @@ static USAGE: &str = "USAGE:\trustydice ndx[+|-]m";
 fn main() {
     let args: Vec<String> = env::args().collect();
     if args.contains(&String::from("-i")) || args.contains(&String::from("--interactive")) {
-        interactive_mode();
+        interactive_mode(args.get(2));
     } else {
         single_process_mode(env::args());
     }
@@ -33,8 +35,13 @@ fn single_process_mode(ref mut args: env::Args) {
     execute_roll(&query);
 }
 
-fn interactive_mode() {
+fn interactive_mode(logfile: Option<&String>) {
     display_help();
+
+    let mut file = match logfile {
+        Some(path) => File::create(path).expect("Unable to create file"),
+        None => File::create("/tmp/rsdice-xyz").expect("Unable to create file"),
+    };
 
     loop {
         println!("Enter your roll command: ndx[+|-]m");
@@ -45,7 +52,10 @@ fn interactive_mode() {
         match query.trim() {
             "help" => display_help(),
             "exit" => process::exit(0),
-            _ => execute_roll(&query),
+            _ => {
+                let log = execute_roll(&query);
+                file.write_all(log.as_bytes()).expect("Unable to write log");
+            },
         }
     }
 }
@@ -67,12 +77,15 @@ fn display_help() {
     println!("\t[d100]: 100-sided die");
 }
 
-fn execute_roll(query: &String) {
+fn execute_roll(query: &String) -> String {
     let roll = Command::from(&query.trim()[..]).run();
     let log = logger::build_log(&roll);
 
     let dt = Local::now().format("%m/%d/%Y %H:%M:%S");
 
-    println!("[{}] {}", dt, log);
-    println!(" >>> {:?}", &roll.rolls);
+    let log = format!("[{}] {}\n >>> {:?}\n", dt, log, &roll.rolls);
+
+    println!("{}", log);
+
+    log
 }
