@@ -38,9 +38,9 @@ fn single_process_mode(ref mut args: env::Args) {
 fn interactive_mode(logfile: Option<&String>) {
     display_help();
 
-    let mut file = match logfile {
-        Some(path) => File::create(path).expect("Unable to create file"),
-        None => File::create("/tmp/rsdice-xyz").expect("Unable to create file"),
+    let ref mut file_result = match logfile {
+        Some(path) => Ok(File::create(path).expect("Unable to create file")),
+        None => Err("No file specified"),
     };
 
     loop {
@@ -54,7 +54,11 @@ fn interactive_mode(logfile: Option<&String>) {
             "exit" => process::exit(0),
             _ => {
                 let log = execute_roll(&query);
-                file.write_all(log.as_bytes()).expect("Unable to write log");
+
+                match file_result {
+                    Ok(file) => file.write_all(log.as_bytes()).expect("Unable to write log"),
+                    Err(_) => () // If there is no filepath specified then no log is written
+                }
             },
         }
     }
