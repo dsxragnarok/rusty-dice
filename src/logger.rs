@@ -1,13 +1,14 @@
-use chrono::Local;
+use chrono::{DateTime, Local, TimeZone};
 use dice::RollResult;
 
 /// Constructs the log text given the RollResult
 ///
 /// Parameters
 /// * `result` - The a dice roll result object
+/// * `date_time` - The timestamp of the roll
 ///
 /// Returns the formatted log String
-pub fn build_log(result: &RollResult) -> String {
+pub fn build_log(result: &RollResult, date_time: &DateTime<Local>) -> String {
     let RollResult { die, rolls, modifier, total } = result;
 
     let modifier = if *modifier > 0 {
@@ -17,10 +18,9 @@ pub fn build_log(result: &RollResult) -> String {
     } else {
         format!("{}", *modifier)
     };
-    let dt = Local::now().format("%m/%d/%Y %H:%M:%S");
 
     format!("[{}] You rolled {}d{}{} for {}\n >>> {:?}",
-        dt,
+        date_time.format("%m/%d/%Y %H:%M:%S"),
         rolls.len(),
         *die as u32,
         modifier,
@@ -44,7 +44,7 @@ mod tests {
             total: 20,
         };
 
-        let log = build_log(&result);
+        let log = build_log(&result, &Local::now());
 
         assert!(log.find("You rolled 4d8+4 for 20") != None);
     }
@@ -58,7 +58,7 @@ mod tests {
             total: 4,
         };
 
-        let log = build_log(&result);
+        let log = build_log(&result, &Local::now());
 
         assert!(log.find("You rolled 2d4-3 for 4") != None);
     }
@@ -72,7 +72,7 @@ mod tests {
             total: 6,
         };
 
-        let log = build_log(&result);
+        let log = build_log(&result, &Local::now());
 
         assert!(log.find("You rolled 1d6 for 6") != None);
     }
@@ -86,8 +86,24 @@ mod tests {
             total: 12,
         };
 
-        let log = build_log(&result);
+        let log = build_log(&result, &Local::now());
 
         assert!(log.find(">>> [2, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 1]") != None);
+    }
+
+    #[test]
+    fn it_constructs_the_log_text_with_timestamp() {
+        let result = RollResult {
+            die: D8,
+            modifier: 0,
+            rolls: vec![8],
+            total: 8,
+        };
+
+        let expected_timestamp = "09/22/2018 01:12:06";
+        let datetime = Local.datetime_from_str(expected_timestamp, "%m/%d/%Y %H:%M:%S").unwrap();
+        let log = build_log(&result, &datetime);
+
+        assert!(log.find(expected_timestamp) != None);
     }
 }

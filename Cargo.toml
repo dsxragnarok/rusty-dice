@@ -1,6 +1,6 @@
 [package]
 name = "rustydice"
-version = "0.4.2"
+version = "0.4.3"
 authors = ["Kevin Phung <phung.kevin@gmail.com>"]
 description = "A dice rolling app. Inspired by Dice Dude."
 repository = "https://github.com/dsxragnarok/rusty-dice"

@@ -1,3 +1,4 @@
+extern crate chrono;
 extern crate rustydice;
 
 use std::env;
@@ -5,6 +6,7 @@ use std::process;
 use std::fs::File;
 use std::io;
 use std::io::Write;
+use chrono::Local;
 use rustydice::{dice::Roll, logger};
 
 static USAGE: &str = "USAGES:\n\tOne-Off Roll: rustydice ndx[+|-]m\n\tInteractive: rustydice --interactive [/optional/path/to/outputfile]";
@@ -80,7 +82,7 @@ fn display_help() {
 
 fn execute_roll(query: &String) -> String {
     let roll = Roll::from(&query.trim()[..]).roll();
-    let log = logger::build_log(&roll);
+    let log = logger::build_log(&roll, &Local::now());
 
     println!("{}", log);
 
