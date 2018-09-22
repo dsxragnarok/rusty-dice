@@ -1,7 +1,10 @@
 [package]
 name = "rustydice"
-version = "0.4.1"
+version = "0.4.2"
 authors = ["Kevin Phung <phung.kevin@gmail.com>"]
+description = "A dice rolling app. Inspired by Dice Dude."
+repository = "https://github.com/dsxragnarok/rusty-dice"
+keywords = ["dice", "dnd", "tabletop", "rpg"]
 
 [dependencies]
 chrono = "0.4"
