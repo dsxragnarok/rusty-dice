@@ -5,10 +5,9 @@ use std::process;
 use std::fs::File;
 use std::io;
 use std::io::Write;
-use rustydice::dice::Roll;
-use rustydice::logger;
+use rustydice::{dice::Roll, logger};
 
-static USAGE: &str = "USAGE:\trustydice ndx[+|-]m";
+static USAGE: &str = "USAGES:\n\tOne-Off Roll: rustydice ndx[+|-]m\n\tInteractive: rustydice --interactive [/optional/path/to/outputfile]";
 
 fn main() {
     let args: Vec<String> = env::args().collect();
