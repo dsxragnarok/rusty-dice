@@ -2,7 +2,7 @@ use rand::{thread_rng, Rng};
 use rand::distributions::Uniform;
 
 /// The available dice types denoting the number of sides
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub enum Die {
     D2 = 2,
     D4 = 4,
@@ -15,7 +15,7 @@ pub enum Die {
 }
 
 /// Represents a Roll Roll
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct Roll {
     die: Die,
     modifier: i32,
@@ -79,9 +79,47 @@ impl Roll {
     }
 }
 
-impl PartialEq for Roll {
-    fn eq(&self, other: &Roll) -> bool {
-        self.die as u32 == other.die as u32
+impl<'a> From<&'a str> for Roll {
+    fn from(text: &str) -> Roll {
+        let string_parts: Vec<&str> = text.split('d').collect();
+        let n = string_parts[0];
+        let number_of_rolls: u32 = if n == "" { 1 } else { n.parse().unwrap() };
+
+        let predicate = string_parts[1];
+        let index = match predicate.find('+') {
+            Some(i) => i,
+            None => match predicate.find('-') {
+                Some(i) => i,
+                None => 0,
+            },
+        };
+
+        let (die, modifier) = if index > 0 {
+            (
+                &predicate[..index],
+                predicate[index..].parse::<i32>().unwrap()
+            )
+        } else {
+            (predicate, 0)
+        };
+
+        let die = match die {
+            "2" => Die::D2,
+            "4" => Die::D4,
+            "6" => Die::D6,
+            "8" => Die::D8,
+            "10" => Die::D10,
+            "12" => Die::D12,
+            "20" => Die::D20,
+            "100" => Die::D100,
+            _ => panic!("Unable to match the die type!"),
+        };
+
+        Roll {
+            die,
+            number_of_rolls,
+            modifier,
+        }
     }
 }
 
@@ -164,5 +202,51 @@ mod tests {
 
         let sum: u32 = result.rolls.iter().sum();
         assert_eq!(result.total, sum as i32 + result.modifier);
+    }
+
+    #[test]
+    fn it_parses_a_unit_d4_die() {
+        let expected = Roll::new(Die::D4);
+        let roll = Roll::from("d4");
+
+        assert_eq!(expected, roll);
+    }
+
+    #[test]
+    fn it_parses_a_unit_d12_die() {
+        let expected = Roll::new(Die::D12);
+        let roll = Roll::from("d12");
+
+        assert_eq!(expected, roll);
+    }
+
+    #[test]
+    fn it_parses_2d8() {
+        let mut expected = Roll::new(Die::D8);
+        expected.number_of_rolls(2);
+
+        let roll = Roll::from("2d8");
+
+        assert_eq!(expected, roll);
+    }
+
+    #[test]
+    fn it_parses_3d6_with_positive_modifier() {
+        let mut expected = Roll::new(Die::D6);
+        expected.number_of_rolls(3).modifier(2);
+
+        let roll = Roll::from("3d6+2");
+
+        assert_eq!(expected, roll);
+    }
+
+    #[test]
+    fn it_parses_1d20_with_negative_modifier() {
+        let mut expected = Roll::new(Die::D20);
+        expected.modifier(-4);
+
+        let roll = Roll::from("1d20-4");
+
+        assert_eq!(expected, roll);
     }
 }
