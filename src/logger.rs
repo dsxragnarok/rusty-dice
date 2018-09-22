@@ -1,3 +1,4 @@
+use chrono::Local;
 use dice::RollResult;
 
 /// Constructs the log text given the RollResult
@@ -16,8 +17,16 @@ pub fn build_log(result: &RollResult) -> String {
     } else {
         format!("{}", *modifier)
     };
+    let dt = Local::now().format("%m/%d/%Y %H:%M:%S");
 
-    format!("You rolled {}d{}{} for {}", rolls.len(), *die as u32, modifier, total)
+    format!("[{}] You rolled {}d{}{} for {}\n >>> {:?}",
+        dt,
+        rolls.len(),
+        *die as u32,
+        modifier,
+        total,
+        rolls,
+    )
 }
 
 #[cfg(test)]
@@ -37,7 +46,7 @@ mod tests {
 
         let log = build_log(&result);
 
-        assert_eq!(log, "You rolled 4d8+4 for 20");
+        assert!(log.find("You rolled 4d8+4 for 20") != None);
     }
 
     #[test]
@@ -51,7 +60,7 @@ mod tests {
 
         let log = build_log(&result);
 
-        assert_eq!(log, "You rolled 2d4-3 for 4");
+        assert!(log.find("You rolled 2d4-3 for 4") != None);
     }
 
     #[test]
@@ -65,6 +74,20 @@ mod tests {
 
         let log = build_log(&result);
 
-        assert_eq!(log, "You rolled 1d6 for 6");
+        assert!(log.find("You rolled 1d6 for 6") != None);
+    }
+
+    #[test]
+    fn it_constructs_the_log_text_with_vector_of_individual_rolls() {
+        let result = RollResult {
+            die: D2,
+            modifier: 0,
+            rolls: vec![2, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 1],
+            total: 12,
+        };
+
+        let log = build_log(&result);
+
+        assert!(log.find(">>> [2, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 1]") != None);
     }
 }
