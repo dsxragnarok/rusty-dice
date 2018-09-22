@@ -24,23 +24,6 @@
 - `modifier`: i32
 - `total`: i32
 
-## Command module
-### Command
-#### properties
-- `number_of_rolls`: u32
-- `die`: Die
-- `modifier`: i32
-#### methods
-- new(n: u32, die: Die, modifier: i32) -> Command
-- from(input_text: &str) -> Command
-- run() -> RollResult
-
-### syntax
-- `dx`: roll a **x-sided** die **once**.
-- `ndx`: roll a **x-sided** die **n times**.
-- `ndx+m`: roll a **x-sided** die **n times** then add **m** to the result.
-- `ndx-m`: roll a **x-sided** die **n times** then subtract **m** from the result.
-
 ## Logger module
 ### functions
 - build_log(result) -> String
@@ -50,6 +33,12 @@
 [09/14/2018 22:03:42] You rolled 2d6+3 for 13.
     >>> { 6, 4 }
 ```
+
+## Syntax
+- `dx`: roll a **x-sided** die **once**.
+- `ndx`: roll a **x-sided** die **n times**.
+- `ndx+m`: roll a **x-sided** die **n times** then add **m** to the result.
+- `ndx-m`: roll a **x-sided** die **n times** then subtract **m** from the result.
 
 ## Todos
 - [x] `Command` needs a `run()` or `execute()`
