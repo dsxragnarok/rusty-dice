@@ -14,6 +14,28 @@ pub enum Die {
     D100 = 100
 }
 
+impl From<u32> for Die {
+    fn from(sides: u32) -> Die {
+        return match sides {
+            2 => Die::D2,
+            4 => Die::D4,
+            6 => Die::D6,
+            8 => Die::D8,
+            10 => Die::D10,
+            12 => Die::D12,
+            20 => Die::D20,
+            100 => Die::D100,
+            _ => panic!("Unable to match the die type"),
+        }
+    }
+}
+
+impl From<Die> for u32 {
+    fn from(die: Die) -> u32 {
+        die as u32
+    }
+}
+
 /// Represents a Roll Roll
 #[derive(Debug, PartialEq)]
 pub struct Roll {
@@ -25,7 +47,7 @@ pub struct Roll {
 impl Roll {
     /// Returns a random number between 1 and maximum number on a given die
     fn _roll(&self) -> u32 {
-        let range = Uniform::new_inclusive(1, self.die as u32);
+        let range = Uniform::new_inclusive(1, self.die.into());
 
         thread_rng().sample(range)
     }
