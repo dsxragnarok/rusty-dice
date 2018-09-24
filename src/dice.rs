@@ -160,58 +160,56 @@ mod tests {
 
     #[test]
     fn it_creates_a_four_sided_die() {
-        let d4 = Roll::new(Die::D4);
-        assert_eq!(d4.die as u32, 4);
+        let Roll { die: d4, .. } = Roll::new(Die::D4);
+        assert_eq!(d4 as u32, 4);
     }
     #[test]
     fn it_creates_a_eight_sided_die() {
-        let d8 = Roll::new(Die::D8);
-        assert_eq!(d8.die as u32, 8);
+        let Roll { die: d8, .. } = Roll::new(Die::D8);
+        assert_eq!(d8 as u32, 8);
     }
     #[test]
     fn it_creates_a_twenty_sided_die() {
-        let d20 = Roll::new(Die::D20);
-        assert_eq!(d20.die as u32, 20);
+        let Roll { die: d20, .. } = Roll::new(Die::D20);
+        assert_eq!(d20 as u32, 20);
     }
 
     #[test]
     fn it_sets_the_n_property() {
-        let mut die = Roll::new(Die::D12);
-        die.number_of_rolls(3);
+        let mut roll = Roll::new(Die::D12);
+        roll.number_of_rolls(3);
 
-        assert_eq!(die.number_of_rolls, 3);
+        assert_eq!(roll.number_of_rolls, 3);
     }
 
     #[test]
     fn it_sets_the_modifier_property() {
-        let mut die = Roll::new(Die::D100);
-        die.modifier(-20);
+        let mut roll = Roll::new(Die::D100);
+        roll.modifier(-20);
 
-        assert_eq!(die.modifier, -20);
+        assert_eq!(roll.modifier, -20);
     }
 
     #[test]
     fn it_returns_number_between_1_and_4() {
         for _ in 0..100 {
-            let d4 = Roll::new(Die::D4);
-            let roll = d4._roll();
-            assert!(roll >= 1 && roll <= 4);
+            let roll = Roll::new(Die::D4);
+            let one_roll = roll._roll();
+            assert!(one_roll >= 1 && one_roll <= 4);
         }
     }
 
     #[test]
     fn it_returns_resulting_vector_of_rolls_and_total() {
-        let mut d6 = Roll::new(Die::D6);
-        d6.number_of_rolls(6);
-        d6.modifier(3);
-        let result = d6.roll();
+        let mut roll = Roll::new(Die::D6);
+        roll.number_of_rolls(6);
+        let result = roll.roll();
 
-        assert_eq!(result.die as u32, d6.die as u32);
-        assert_eq!(result.modifier, d6.modifier);
-        assert_eq!(result.rolls.len(), d6.number_of_rolls as usize);
+        assert_eq!(result.die as u32, roll.die as u32);
+        assert_eq!(result.rolls.len(), roll.number_of_rolls as usize);
 
         let sum: u32 = result.rolls.iter().sum();
-        assert_eq!(result.total, sum as i32 + result.modifier);
+        assert_eq!(result.total, sum as i32);
     }
 
     #[test]
