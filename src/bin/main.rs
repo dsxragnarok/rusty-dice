@@ -6,6 +6,7 @@ use std::process;
 use std::fs::File;
 use std::io;
 use std::io::Write;
+use std::error::Error;
 use chrono::Local;
 use rustydice::{dice::Roll, logger};
 
@@ -81,7 +82,14 @@ fn display_help() {
 }
 
 fn execute_roll(query: &String) -> String {
-    let roll = Roll::from(&query.trim()[..]).roll();
+    let roll = match Roll::try_from(&query.trim()[..]) {
+        Ok(mut roll) => roll.roll(),
+        Err(err) => {
+            println!("[Error] {}", err);
+            return err.description().to_string();
+        }
+    };
+
     let log = logger::build_log(&roll, &Local::now());
 
     println!("{}", log);
