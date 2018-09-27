@@ -1,6 +1,8 @@
 # Rusty Dice
 An implementation of **Dice Dude** in **Rust**.
 
+**v1.0.0**
+
 ## Usage
 ```bash
 rustydice ndx[+|-]m

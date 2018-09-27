@@ -49,4 +49,4 @@
 - [x] implement `help` command for **interactive mode**
 - [x] implement `exit` command for **interactive mode**
 - [x] implement `save-to-file`
-- [ ] better error handling
+- [x] better error handling
