@@ -155,6 +155,38 @@ impl Roll {
             rolls,
         }
     }
+
+    pub fn try_from(text: &str) -> Result<Roll, Error> {
+        let string_parts: Vec<&str> = text.split('d').collect();
+        let n = string_parts[0];
+        let number_of_rolls: u32 = if n == "" { 1 } else { n.parse()? };
+
+        let predicate = string_parts[1];
+        let index = match predicate.find('+') {
+            Some(i) => i,
+            None => match predicate.find('-') {
+                Some(i) => i,
+                None => 0,
+            },
+        };
+
+        let (die, modifier) = if index > 0 {
+            (
+                &predicate[..index],
+                predicate[index..].parse::<i32>()?
+            )
+        } else {
+            (predicate, 0)
+        };
+
+        let die = Die::parse(die)?;
+
+        Ok(Roll {
+            die,
+            number_of_rolls,
+            modifier,
+        })
+    }
 }
 
 impl<'a> From<&'a str> for Roll {
@@ -388,6 +420,95 @@ mod tests {
         match die {
             Ok(die) => panic!(format!("Expected an error but found {:?}", die)),
             Err(e) => assert_eq!(e.description(), "Unable to match the die type!"),
+        }
+    }
+
+    #[test]
+    fn it_successfully_tries_to_parse_a_d8_die() {
+        let expected = Roll::new(Die::D8);
+        let roll = Roll::try_from("d8");
+
+        assert_eq!(expected, roll.unwrap());
+    }
+
+    #[test]
+    fn it_successfully_tries_to_parse_2d10() {
+        let mut expected = Roll::new(Die::D10);
+        expected.number_of_rolls(2);
+
+        let roll = Roll::try_from("2d10");
+
+        assert_eq!(expected, roll.unwrap());
+    }
+
+    #[test]
+    fn it_successfully_tries_to_parse_4d6_with_positive_modifier() {
+        let mut expected = Roll::new(Die::D6);
+        expected.number_of_rolls(4);
+        expected.modifier(5);
+
+        let roll = Roll::try_from("4d6+5");
+
+        assert_eq!(expected, roll.unwrap());
+    }
+
+    #[test]
+    fn it_successfully_tries_to_parse_1d100_with_negative_modifier() {
+        let mut expected = Roll::new(Die::D100);
+        expected.modifier(-20);
+
+        let roll = Roll::try_from("1d100-20");
+
+        assert_eq!(expected, roll.unwrap());
+    }
+
+    #[test]
+    fn it_should_raise_error_for_invalid_die() {
+        let roll = Roll::try_from("1d9");
+
+        match roll {
+            Ok(_) => panic!("Expected an error but received Roll"),
+            Err(e) => assert_eq!(e.description(), "Unable to match the die type!"),
+        }
+    }
+
+    #[test]
+    fn it_should_raise_error_for_invalid_n() {
+        let roll = Roll::try_from("xd10");
+
+        match roll {
+            Ok(_) => panic!("Expected an error but received Roll"),
+            Err(e) => assert_eq!(e.description(), "invalid digit found in string"),
+        }
+    }
+
+    #[test]
+    fn it_should_raise_error_for_invalid_negative_mod() {
+        let roll = Roll::try_from("1d2-x");
+
+        match roll {
+            Ok(_) => panic!("Expected an error but received Roll"),
+            Err(e) => assert_eq!(e.description(), "invalid digit found in string"),
+        }
+    }
+
+    #[test]
+    fn it_should_raise_error_for_invalid_positive_mod() {
+        let roll = Roll::try_from("1d4+x");
+
+        match roll {
+            Ok(_) => panic!("Expected an error but received Roll"),
+            Err(e) => assert_eq!(e.description(), "invalid digit found in string"),
+        }
+    }
+
+    #[test]
+    fn it_should_raise_error_for_invalid_mod() {
+        let roll = Roll::try_from("1d12xxx");
+
+        match roll {
+            Ok(_) => panic!("Expected an error but received Roll"),
+            Err(e) => assert_eq!(e.description(), "invalid digit found in string"),
         }
     }
 }
