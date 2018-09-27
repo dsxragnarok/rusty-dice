@@ -1,5 +1,37 @@
 use rand::{thread_rng, Rng};
 use rand::distributions::Uniform;
+use std::error::Error as ErrorTrait;
+use std::num::ParseIntError;
+use std::fmt;
+
+#[derive(Debug)]
+pub struct Error {
+    details: String
+}
+
+impl Error {
+    fn new(msg: &str) -> Error {
+        Error { details: msg.to_string() }
+    }
+}
+
+impl fmt::Display for Error {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.details)
+    }
+}
+
+impl ErrorTrait for Error {
+    fn description(&self) -> &str {
+        &self.details
+    }
+}
+
+impl From<ParseIntError> for Error {
+    fn from(err: ParseIntError) -> Self {
+        Error::new(err.description())
+    }
+}
 
 /// The available dice types denoting the number of sides
 #[derive(Debug, Copy, Clone, PartialEq)]
@@ -12,6 +44,30 @@ pub enum Die {
     D12 = 12,
     D20 = 20,
     D100 = 100
+}
+
+impl Die {
+    pub fn try_from(sides: u32) -> Result<Die, Error> {
+        match sides {
+            2 => Ok(Die::D2),
+            4 => Ok(Die::D4),
+            6 => Ok(Die::D6),
+            8 => Ok(Die::D8),
+            10 => Ok(Die::D10),
+            12 => Ok(Die::D12),
+            20 => Ok(Die::D20),
+            100 => Ok(Die::D100),
+            _ => Err(Error::new("Unable to match the die type!")),
+        }
+    }
+
+    pub fn parse(sides: &str) -> Result<Die, Error> {
+        let sides = sides.to_string().parse();
+        match sides {
+            Ok(i) => return Self::try_from(i),
+            Err(e) => return Err(Error::from(e)),
+        }
+    }
 }
 
 impl From<u32> for Die {
@@ -268,5 +324,70 @@ mod tests {
         let roll = Roll::from("1d20-4");
 
         assert_eq!(expected, roll);
+    }
+
+    #[test]
+    fn it_creates_a_d2_from_2u32() {
+        let die = Die::try_from(2u32);
+
+        assert_eq!(die.unwrap(), Die::D2);
+    }
+
+    #[test]
+    fn it_creates_a_d4_from_4u32() {
+        let die = Die::try_from(4u32);
+
+        assert_eq!(die.unwrap(), Die::D4);
+    }
+
+    #[test]
+    fn it_creates_a_d20_from_20u32() {
+        let die = Die::try_from(20u32);
+
+        assert_eq!(die.unwrap(), Die::D20);
+    }
+
+    #[test]
+    fn it_creates_an_error_for_invalid_die() {
+        let die = Die::try_from(9u32);
+
+        match die {
+            Ok(die) => panic!(format!("Expected an error but found {:?}", die)),
+            Err(e) => assert_eq!(e.description(), "Unable to match the die type!"),
+        }
+    }
+
+    #[test]
+    fn it_creates_a_d8_from_string() {
+        let die = Die::parse("8");
+
+        assert_eq!(die.unwrap(), Die::D8);
+    }
+
+    #[test]
+    fn it_creates_a_d12_from_string() {
+        let die = Die::parse("12");
+
+        assert_eq!(die.unwrap(), Die::D12);
+    }
+
+    #[test]
+    fn it_returns_an_error_for_invalid_input() {
+        let die = Die::parse("some");
+
+        match die {
+            Ok(die) => panic!(format!("Expected an error but found {:?}", die)),
+            Err(e) => assert_eq!(e.description(), "invalid digit found in string"),
+        }
+    }
+
+    #[test]
+    fn it_returns_an_error_for_invalid_die_string() {
+        let die = Die::parse("11");
+
+        match die {
+            Ok(die) => panic!(format!("Expected an error but found {:?}", die)),
+            Err(e) => assert_eq!(e.description(), "Unable to match the die type!"),
+        }
     }
 }
